@@ -1,8 +1,5 @@
 KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 
-KBUILD_OPTIONS := WLAN_ROOT=$(PWD)
-KBUILD_OPTIONS += MODNAME?=wlan
-
 # Determine if the driver license is Open source or proprietary
 # This is determined under the assumption that LICENSE doesn't change.
 # Please change here if driver license text changes.
@@ -11,10 +8,14 @@ WLAN_OPEN_SOURCE = $(shell if grep -q "MODULE_LICENSE(\"Dual BSD/GPL\")" \
 		$(LICENSE_FILE); then echo 1; else echo 0; fi)
 
 #By default build for CLD
-WLAN_SELECT := CONFIG_QCA_CLD_WLAN=m
-KBUILD_OPTIONS += CONFIG_QCA_WIFI_ISOC=0
-KBUILD_OPTIONS += CONFIG_QCA_WIFI_2_0=1
-KBUILD_OPTIONS += $(WLAN_SELECT)
+KBUILD_OPTIONS := WLAN_ROOT=$(PWD)
+KBUILD_OPTIONS += MODNAME?=wlan
+KBUILD_OPTIONS += CONFIG_NON_QC_PLATFORM=y
+KBUILD_OPTIONS += CONFIG_ROME_IF=pci
+KBUILD_OPTIONS += CONFIG_WLAN_FEATURE_11W=y
+KBUILD_OPTIONS += CONFIG_WLAN_FEATURE_FILS=y
+KBUILD_OPTIONS += CONFIG_WLAN_WAPI_MODE_11AC_DISABLE=y
+KBUILD_OPTIONS += CONFIG_QCA_CLD_WLAN=m
 KBUILD_OPTIONS += WLAN_OPEN_SOURCE=$(WLAN_OPEN_SOURCE)
 KBUILD_OPTIONS += $(KBUILD_EXTRA) # Extra config if any
 
